@@ -27,6 +27,9 @@ partial class Program // ele pode lidar com a classe program em outros arquivo, 
 
         CriarArquivo();
         CriarArquivoComWriter();
+        TesteEscrita();
+        CriarArquivoComBinario();
+        LeituraBinaria();
         Console.ReadLine();
    
     }
@@ -67,6 +70,55 @@ partial class Program // ele pode lidar com a classe program em outros arquivo, 
         {
             escritor.Write("456,789456-1,43000.50,Carlos Santos");
             Console.WriteLine($"Arquivo criado com sucesso em {(Path.GetFullPath("contasExportadasWriter.csv"))}");
+        }
+    }
+
+    static void TesteEscrita()
+    {
+        var caminhoNovoArquivo = "teste.txt";
+        using (var fluxoArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create)) //CreateNew só cria se não existir um igual
+        using (var escritor = new StreamWriter(fluxoArquivo))
+        {
+            for (int i = 0; i < 1000000; i++)
+            {
+                escritor.WriteLine($"Linha {i}");
+                escritor.Flush();
+                Console.WriteLine($"Linha {i} foi escrita no arquivo. Pressione enter... "); // nao estava gravando no arquivo por conta da latencia no hd, demora um pouco mais
+                // nos outros casos, e utilizado a memoria ram
+                //o flush vai despejar o buffer para o stream, fazendo diretamente
+                Console.ReadLine();
+
+            }
+        }
+    }
+
+    static void CriarArquivoComBinario()
+    {
+        var caminhoNovoArquivo = "testeBinario.txt";
+        using (var fluxoArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create)) //CreateNew só cria se não existir um igual
+        using (var escritor = new BinaryWriter(fluxoArquivo))
+        {
+            // ao inves de armazenar um texto puro, vai armazenar um binario oara os valores numericos. o valor inteiro ou double ali pode ser muito grande 
+            escritor.Write(456);
+            escritor.Write(789456);
+            escritor.Write(100310.50);
+            escritor.Write("Danillo");
+        }
+    }
+
+    static void LeituraBinaria()
+    {
+        var caminhoNovoArquivo = "testeBinario.txt";
+        using (var fluxoArquivo = new FileStream(caminhoNovoArquivo, FileMode.Open)) //CreateNew só cria se não existir um igual
+        using (var leitor = new BinaryReader(fluxoArquivo))
+        {
+            //ler o arquivo binario
+            var agencia = leitor.ReadInt32();
+            var numero = leitor.ReadInt32();
+            var saldo = leitor.ReadDouble();
+            var titular = leitor.ReadString();
+
+            Console.WriteLine($"Agência: {agencia}, Conta: {numero}, Saldo: {saldo}, Titular: {titular}");
         }
     }
 }
