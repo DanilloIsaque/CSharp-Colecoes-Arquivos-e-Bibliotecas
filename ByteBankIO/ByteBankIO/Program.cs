@@ -5,31 +5,32 @@ partial class Program // ele pode lidar com a classe program em outros arquivo, 
 {
     static void Main(string[] args)
     {
-        var enderecoArquiv = "contas.txt";
+        //var enderecoArquiv = "contas.txt";
 
-        using (var fluxoArquivo = new FileStream(enderecoArquiv, FileMode.Open))
-        {
-            var leitor = new StreamReader(fluxoArquivo);//StreamReader é uma classe intermediária que fará a manipulação e leitura dos bytes do FileStream
-           // var linha = leitor.ReadLine();
-            //var texto = leitor.ReadToEnd();
-            //Console.WriteLine(texto);
-            //var numero = leitor.Read(); //primeiro byte do arquivo
-            //Console.WriteLine(numero);
+        //using (var fluxoArquivo = new FileStream(enderecoArquiv, FileMode.Open))
+        //{
+        //    var leitor = new StreamReader(fluxoArquivo);//StreamReader é uma classe intermediária que fará a manipulação e leitura dos bytes do FileStream
+        //   // var linha = leitor.ReadLine();
+        //    //var texto = leitor.ReadToEnd();
+        //    //Console.WriteLine(texto);
+        //    //var numero = leitor.Read(); //primeiro byte do arquivo
+        //    //Console.WriteLine(numero);
 
-            while (!leitor.EndOfStream)//enquanto não for o final do arquivo, fazendo linha por linha
-            {
-                var linha = leitor.ReadLine();
-                var contaCorrente = ConverterStringParaContaCorrente(linha);
-                var msg = $"Titular: {contaCorrente.Titular.Nome}, Agência: {contaCorrente.Agencia}, Conta: {contaCorrente.Numero}, Saldo: {contaCorrente.Saldo}";
-                Console.WriteLine(msg);
-            }
-        }
+        //    while (!leitor.EndOfStream)//enquanto não for o final do arquivo, fazendo linha por linha
+        //    {
+        //        var linha = leitor.ReadLine();
+        //        var contaCorrente = ConverterStringParaContaCorrente(linha);
+        //        var msg = $"Titular: {contaCorrente.Titular.Nome}, Agência: {contaCorrente.Agencia}, Conta: {contaCorrente.Numero}, Saldo: {contaCorrente.Saldo}";
+        //        Console.WriteLine(msg);
+        //    }
+        //}
 
-        CriarArquivo();
-        CriarArquivoComWriter();
-        TesteEscrita();
-        CriarArquivoComBinario();
-        LeituraBinaria();
+        //CriarArquivo();
+        //CriarArquivoComWriter();
+        //TesteEscrita();
+        //CriarArquivoComBinario();
+        //LeituraBinaria();
+        StreamConsole();
         Console.ReadLine();
    
     }
@@ -119,6 +120,24 @@ partial class Program // ele pode lidar com a classe program em outros arquivo, 
             var titular = leitor.ReadString();
 
             Console.WriteLine($"Agência: {agencia}, Conta: {numero}, Saldo: {saldo}, Titular: {titular}");
+        }
+    }
+
+    static void StreamConsole()
+    {
+        using (var fluxoEntrada = Console.OpenStandardInput()) // fluxo de entrada padrao do console
+        using(var fluxoSaida = new FileStream("console.txt", FileMode.Create))
+        {
+           var buffer = new byte[1024];
+
+            while (true)
+            {
+                var numeroBytesLidos = fluxoEntrada.Read(buffer, 0, 1024);
+
+                fluxoSaida.Write(buffer, 0, numeroBytesLidos); 
+                fluxoSaida.Flush();
+                Console.WriteLine($"Bytes lidos: {numeroBytesLidos}");
+            }
         }
     }
 }
