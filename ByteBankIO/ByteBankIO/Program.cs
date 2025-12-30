@@ -1,41 +1,29 @@
 ﻿using ByteBankIO;
 using System.Text;
 
-class Program
+partial class Program // ele pode lidar com a classe program em outros arquivo, de uma forma unica, mas separada em diversos arquivos
 {
     static void Main(string[] args)
     {
         var enderecoArquiv = "contas.txt";
- 
-        var fluxoArquivo = new FileStream(enderecoArquiv, FileMode.Open);
-        var buffer = new byte[1024];
-        var numeroBytesLidos = -1;
 
-
-        while(numeroBytesLidos != 0)
+        using (var fluxoArquivo = new FileStream(enderecoArquiv, FileMode.Open))
         {
-            numeroBytesLidos = fluxoArquivo.Read(buffer, 0, 1024);
-            EscreverBuffer(buffer);
+            var leitor = new StreamReader(fluxoArquivo);//StreamReader é uma classe intermediária que fará a manipulação e leitura dos bytes do FileStream
+           // var linha = leitor.ReadLine();
+            //var texto = leitor.ReadToEnd();
+            //Console.WriteLine(texto);
+            //var numero = leitor.Read(); //primeiro byte do arquivo
+            //Console.WriteLine(numero);
+
+            while (!leitor.EndOfStream)//enquanto não for o final do arquivo, fazendo linha por linha
+            {
+                var linha = leitor.ReadLine();
+                Console.WriteLine(linha);
+            }
         }
-       // fluxoArquivo.Read(buffer, 0, 1024); // stream vai gravar da posicao 0 atéa 1024
-    //Devoluções:
-    // O numero total de bytes lidos do buffer. Isso poderá ser menor que o numero solicitado, se não estiver
-    //disponivel nom momento, ou zero, se o final do fluxo for atingido
-        
         Console.ReadLine();
+   
     }
 
-    static void EscreverBuffer(byte[] buffer)
-    {
-        var utf8 = new UTF8Encoding();
-
-        var texto = utf8.GetString(buffer);
-        Console.Write(texto);
-        /*
-        foreach(var MeuByte in buffer)
-        {
-            Console.Write(MeuByte);
-            Console.Write(" ");
-        }*/
-    }
 }
