@@ -7,7 +7,7 @@ namespace bytebank.Modelos.ADM.Funcionarios
     {
         public string Senha { get; set; }
 
-        public AutenticaoUtil Autenticador { get; set; }
+        AutenticaoUtil Autenticador { get; set; }
         
         public FuncionarioAutenticavel(double salario, string cpf)
             : base(salario, cpf)
